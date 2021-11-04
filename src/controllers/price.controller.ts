@@ -1,64 +1,65 @@
 // Uncomment these imports to begin using these cool features!
-import {get} from '@loopback/rest';
-
-// import {inject} from '@loopback/core';
-
+//import {inject} from '@loopback/context';
+import {inject} from '@loopback/core';
+import {get, param} from '@loopback/rest';
+import {Price} from '../services/index';
 
 export class PriceController {
-  @get('/price/{id}')
-  getPrice(price: number){
-    return `Price: ${price}`;
+
+    constructor(@inject('services.price') protected priceService : Price) {}
+
+
+  @get('/prices')
+  async getTotal(@param.path.number('kilos') kilos: number, @param.path.string('zone') zone: string): Promise<object>{
+    const priceVar = await this.priceService.getPrice(kilos, zone);
+    return priceVar;
   }
 
-  @get('/zone/{id}')
-  getZone(zone: number){
-    return `Zone: ${zone}`;
-  }
 
-  @get('/iva/{id}')
-  getIva(price: number, zone: number) {
+ /* @get('/iva/{id}')
+  async getIva(price: object, zone: string) {
     let iva = 0;
     switch ( zone ) {
-      case 1:
+      case 'zona1':
           iva = 0.16;
           break;
-      case 2:
+      case 'zona2':
           iva = 0.17;
           break;
-      case 3:
+      case 'zona3':
           iva = 0.15;
           break;
-      case 4:
+      case 'zona4':
           iva = 0.12;
           break;
-      case 5:
+      case 'zona5':
           iva = 0.10;
           break;
       default:
           console.log("No zone found");
    }
 
-   return price * iva;
+   return price.price * iva;
   }
 
   @get('/comision/{id}')
-  getComision(price: number, zone: number) {
+  async getComision(price: object, zone: string): Promise<Number> {
     let comision = 0;
 
     switch ( zone ) {
-      case 1:
+      case 'zona1':
         comision = 0.8;
         break;
-      case 2:
+      case 'zona2':
           comision = 0.15;
           break;
-      case 3:
+      case 'zona3':
           comision = 0.20;
           break;
-      case 4:
+      case 'zona4':
           comision = 0.6;
           break;
-      case 5:
+      case 'zona5':
           comision = 0.5;
           break;
       default:
@@ -69,11 +70,20 @@ export class PriceController {
    return price * comision;
   }
 
-  @get('/total/{id}')
-  getTotal(price: number, zone: number){
-    const iva = this.getIva(price, zone);
-    const comision = this.getComision(price, zone);
 
-    return price + iva + comision;
-  }
+
+  @post('/tickets/descuentos/{monto}&{metodo_pago}%{cupon}&{zona}&{envio}')
+  async setValuesForDiscount(){
+    const coupons = ['MASTER20', 'PERRITOFELI', 'NOJADO'];
+    const metodoPago = ['mastercard', 'visa', 'paypal'];
+
+    const myCoupons = coupons[Math.floor(Math.random() * coupons.length)];
+    const myMetodoPago = metodoPago[Math.floor(Math.random() * metodoPago.length)];
+
+    return {
+      monto: get
+      cupon: myCoupons,
+      metodoPago: myMetodoPago
+    }
+  }*/
 }
