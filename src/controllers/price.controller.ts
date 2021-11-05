@@ -9,7 +9,7 @@ export class PriceController {
     constructor(@inject('services.price') protected priceService : Price) {}
 
 
-  @get('/prices')
+  @get('/prices/{kilos}/{zone}')
   async getTotal(@param.path.number('kilos') kilos: number, @param.path.string('zone') zone: string): Promise<object>{
     const priceVar = await this.priceService.getPrice(kilos, zone);
     return priceVar;
