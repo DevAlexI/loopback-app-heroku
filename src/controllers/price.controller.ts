@@ -14,7 +14,7 @@ export class PriceController {
 
   @get('/prices/{kilos}&{zone}')
   async getTotal(@param.path.number('kilos') kilos: number, @param.path.string('zone') zone: string): Promise<String>{
-    const getPrice = await this.priceService.getPrice(kilos, zone);
+    const getPrice = await this.priceService.getPrice(4, "zone1");
     console.log(getPrice);
     return getPrice;
   }

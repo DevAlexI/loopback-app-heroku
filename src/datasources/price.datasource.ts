@@ -17,7 +17,7 @@ const config = {
     {
       template: {
         method: "GET",
-        url: "https://pytluaq.herokuapp.com/zones?filter=%7B%0A%20%20%22offset%22%3A%200%2C%0A%20%20%22limit%22%3A%20100%2C%0A%20%20%22skip%22%3A%200%2C%0A%20%20%22order%22%3A%20%22string%22%2C%0A%20%20%22where%22%3A%20%7B%0A%20%20%20%20%22name%22%3A%22{zone}%22%2C%0A%20%20%20%20%22weight%22%3A%20{kilos}%0A%20%20%7D%2C%0A%20%20%22fields%22%3A%20%7B%0A%20%20%20%20%22id%22%3A%20true%2C%0A%20%20%20%20%22name%22%3A%20true%2C%0A%20%20%20%20%22weight%22%3A%20true%2C%0A%20%20%20%20%22cost%22%3A%20true%2C%0A%20%20%20%20%22time%22%3A%20true%0A%20%20%7D%0A%7D"
+        url: "https://pytluaq.herokuapp.com/zones"
       },
       functions:{
         getPrice: ["kilos", "zone"]
