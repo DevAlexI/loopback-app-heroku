@@ -4,7 +4,7 @@ import {juggler} from '@loopback/repository';
 const config = {
   name: 'price',
   connector: 'rest',
-  baseURL: '',
+  baseURL: 'https://pytluaq.herokuapp.com',
   crud: false,
   options:{
     headers: {
