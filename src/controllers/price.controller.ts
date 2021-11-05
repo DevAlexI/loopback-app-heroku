@@ -6,13 +6,16 @@ import {Price} from '../services/index';
 
 export class PriceController {
 
-    constructor(@inject('services.price') protected priceService : Price) {}
+    constructor(
+      @inject('service.Price')
+    protected priceService : Price
+    ) {}
 
 
   @get('/prices/{kilos}&{zone}')
-  async getTotal(@param.path.number('kilos') kilos: number, @param.path.string('zone') zone: string): Promise<object>{
-    const priceVar = await this.priceService.getPrice(kilos, zone);
-    return priceVar;
+  async getTotal(@param.path.string('kilos') kilos: string, @param.path.string('zone') zone: string): Promise<object>{
+    const getPrice = await this.priceService.getPrice(kilos, zone);
+    return getPrice;
   }
 
 
