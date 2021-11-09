@@ -1,6 +1,30 @@
+import * as Sentry from "@sentry/node";
 import {ApplicationConfig, LoopbackMicroserviciosHeroApplication} from './application';
-
 export * from './application';
+
+Sentry.init({
+  dsn: "https://3e906e9694144e29888386fd1e2fd3df@o1062931.ingest.sentry.io/6053365",
+
+  // We recommend adjusting this value in production, or using tracesSampler
+  // for finer control
+  tracesSampleRate: 1.0,
+});
+
+const transaction = Sentry.startTransaction({
+  op: "test",
+  name: "My First Test Transaction",
+});
+
+setTimeout(() => {
+  try {
+    //foo();
+    console.log("Hello world");
+  } catch (e) {
+    Sentry.captureException(e);
+  } finally {
+    transaction.finish();
+  }
+}, 99);
 
 export async function main(options: ApplicationConfig = {}) {
   const app = new LoopbackMicroserviciosHeroApplication(options);

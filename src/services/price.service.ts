@@ -7,7 +7,8 @@ export interface Price {
   // mapped to REST/SOAP/gRPC operations as stated in the datasource
   // json file.
   //getState(postalCode: string): Promise<object>;
-  getPrice(kilos: number, zone: string): Promise<String>;
+
+  getPrice(kilos: number, zone: string): Promise<any[]>;
 }
 
 export class PriceProvider implements Provider<Price> {

@@ -1,9 +1,33 @@
 // Uncomment these imports to begin using these cool features!
 //import {inject} from '@loopback/context';
 import {inject} from '@loopback/core';
-import {get, param} from '@loopback/rest';
+import {get, param, response, ResponseObject} from '@loopback/rest';
 import {Price} from '../services/index';
 
+
+const PRICE_RESPONSE: ResponseObject = {
+  description: 'Price Response',
+  content: {
+    'application/json': {
+      schema: {
+        type: 'object',
+        title: 'PriceResponse',
+        properties: {
+          name: {type: 'string'},
+          weight: {type: 'string'},
+          cost: {type: 'number'},
+          headers: {
+            type: 'object',
+            properties: {
+              'Content-Type': {type: 'string'},
+            },
+            additionalProperties: true,
+          },
+        },
+      },
+    },
+  },
+};
 export class PriceController {
 
     constructor(
@@ -13,15 +37,33 @@ export class PriceController {
 
 
   @get('/prices/{kilos}&{zone}')
-  async getTotal(@param.path.number('kilos') kilos: number, @param.path.string('zone') zone: string): Promise<String>{
-    const getPrice = await this.priceService.getPrice(kilos, zone);
+  @response(200, PRICE_RESPONSE)
+  async getTotal(@param.path.number('kilos') kilos: number, @param.path.string('zone') zone: string): Promise<object>{
+    const getPrice = await this.priceService.getPrice(kilos, zone); //Obteniendo array con objetos
+    //Encontrar el objeto con el array y guardar el valor en la variable
     console.log(getPrice);
-    return getPrice;
+
+    const obj = getPrice.find(o => o.Name === zone);
+
+    const iva = await this.getIva(zone);
+    const comision = await this.getComision(zone);
+    const monto = obj.cost;
+    const montoIva = monto * iva;
+    const montoComision = monto * comision;
+    const tot = montoIva + montoComision;
+
+    return {
+      montoTotal: monto,
+      iva: iva,
+      comision: comision,
+      total: tot
+    };
+
   }
 
 
- /* @get('/iva/{id}')
-  async getIva(price: object, zone: string) {
+  @get('/iva/{id}')
+  async getIva(zone: string): Promise<number> {
     let iva = 0;
     switch ( zone ) {
       case 'zona1':
@@ -43,11 +85,11 @@ export class PriceController {
           console.log("No zone found");
    }
 
-   return price.price * iva;
+   return iva;
   }
 
   @get('/comision/{id}')
-  async getComision(price: object, zone: string): Promise<Number> {
+  async getComision(zone: string): Promise<number> {
     let comision = 0;
 
     switch ( zone ) {
@@ -71,13 +113,13 @@ export class PriceController {
           break;
    }
 
-   return price * comision;
+   return comision;
   }
 
 
 
-  @post('/tickets/descuentos/{monto}&{metodo_pago}%{cupon}&{zona}&{envio}')
-  async setValuesForDiscount(){
+  @get('/tickets/descuentos/{monto}&{metodo_pago}%{cupon}&{zona}&{envio}')
+  async setValuesForDiscount(): Promise <object>{
     const coupons = ['MASTER20', 'PERRITOFELI', 'NOJADO'];
     const metodoPago = ['mastercard', 'visa', 'paypal'];
 
@@ -85,9 +127,9 @@ export class PriceController {
     const myMetodoPago = metodoPago[Math.floor(Math.random() * metodoPago.length)];
 
     return {
-      monto: get
+      monto: get,
       cupon: myCoupons,
       metodoPago: myMetodoPago
     }
-  }*/
+  }
 }
