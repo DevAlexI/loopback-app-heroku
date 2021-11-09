@@ -62,7 +62,7 @@ export class PriceController {
   }
 
 
-  @get('/iva/{id}')
+  @get('/iva/{zone}')
   async getIva(zone: string): Promise<number> {
     let iva = 0;
     switch ( zone ) {
@@ -88,7 +88,7 @@ export class PriceController {
    return iva;
   }
 
-  @get('/comision/{id}')
+  @get('/comision/{zone}')
   async getComision(zone: string): Promise<number> {
     let comision = 0;
 
